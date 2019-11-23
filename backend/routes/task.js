@@ -4,6 +4,14 @@ const Task = require('../models/task')
 const {User} = require('../models/user')
 const auth = require('../middleware/auth')
 
+router.get('/list', auth, async(req, res)=>{
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(400).send('Usuario no esta en Base de Datos')
+    const tasks = await Task
+                    .find({"userId": req.user._id})
+    res.send(tasks)
+})
+
 router.post('/', auth, async(req, res)=>{
     const user = await User.findById(req.user._id)
     if(!user) return res.status(400).send('no hay ese usuario')
