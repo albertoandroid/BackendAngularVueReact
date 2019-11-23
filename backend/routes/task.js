@@ -3,6 +3,7 @@ const router = express.Router()
 const Task = require('../models/task')
 const {User} = require('../models/user')
 const auth = require('../middleware/auth')
+const upload = require('../middleware/file')
 
 router.get('/list', auth, async(req, res)=>{
     const user = await User.findById(req.user._id)
@@ -10,6 +11,30 @@ router.get('/list', auth, async(req, res)=>{
     const tasks = await Task
                     .find({"userId": req.user._id})
     res.send(tasks)
+})
+
+router.post('/upload', upload.single('image'), auth, async(req, res)=>{
+    const url = req.protocol + '://' + req.get('host')
+
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(400).send('No hay ese user')
+    let imageUrl = null
+    if(req.file.filename){
+        imageUrl = url + '/public/' + req.file.filename
+    } else {
+        imageUrl = null
+    }
+
+    const task = new Task({
+        userId: user._id,
+        name: req.body.name,
+        status: 'to-do',
+        imageUrl: imageUrl,
+        description: req.body.description
+    })
+
+    const result = await task.save()
+    res.status(201).send(result)
 })
 
 router.post('/', auth, async(req, res)=>{
