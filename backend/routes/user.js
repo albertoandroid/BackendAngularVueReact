@@ -15,3 +15,5 @@ router.post('/', async(req, res)=>{
     const jwtToken = user.generateJWT();
     res.status(200).send({jwtToken})
 })
+
+module.exports = router
