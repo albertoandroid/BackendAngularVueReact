@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema({
     description: String,
     status: String,
     imageUrl: String,
-    date: {type:date, default: Date.now}
+    date: {type:Date, default: Date.now}
 })
 
 const Task = mongoose.model('task', taskSchema)
