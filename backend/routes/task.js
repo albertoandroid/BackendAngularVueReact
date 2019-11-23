@@ -47,4 +47,14 @@ router.put('/', auth, async(req, res)=>{
     res.status(200).send(task)
 })
 
+router.delete('/:_id', auth, async(req, res)=>{
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(400).send('No hay usuario')
+    const task = await Task.findByIdAndDelete(req.params._id)
+    if(!task){
+        return res.status(404).send('No hay tarea, no ser ha podido borrar')
+    }
+    res.status(200).send({message: 'borrado'})
+})
+
 module.exports = router
