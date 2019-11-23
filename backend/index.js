@@ -10,6 +10,7 @@ app.use(express.json())
 app.use('/api/user/', user)
 app.use('/api/auth/', auth)
 app.use('/api/task/', task)
+app.use('/public', express.static('public'))
 
 const port = process.env.PORT || 3003
 app.listen(port, ()=> console.log('Escuchando Puerto: ' + port))
